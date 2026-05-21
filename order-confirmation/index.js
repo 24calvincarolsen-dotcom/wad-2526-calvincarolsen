@@ -7,7 +7,9 @@ function loadCart() {
     cart = JSON.parse(params.get('cart'));
 
     let display = '';
+
     let totalItem = 0;
+    let grandTotal = 0;
 
     for (let i = 0; i < menus.length; i++) {
         const e = menus[i];
@@ -17,16 +19,26 @@ function loadCart() {
 
             if (cart[i][j] > 0) {
 
-                totalItem += cart[i][j];
+                const qty = cart[i][j];
+
+                const subtotal = f.price * qty;
+
+                totalItem += qty;
+                grandTotal += subtotal;
 
                 display += `
                     <div class="item">
                         <div>
-                            ${e.name}<br>
-                            <small>${f.description}</small>
+                            <strong>${e.name}</strong><br>
+                            <small>${f.description}</small><br>
+                            <small>
+                                $ ${f.price.toLocaleString()} x ${qty}
+                            </small>
                         </div>
 
-                        <div>x${cart[i][j]}</div>
+                        <div>
+                            $ ${subtotal.toLocaleString()}
+                        </div>
                     </div>
                 `;
             }
@@ -35,11 +47,13 @@ function loadCart() {
 
     document.getElementById('cart').innerHTML = display;
 
-    document.getElementById('totalItem').innerHTML =
-        `Total Item : ${totalItem}`;
+    document.getElementById('totalItem').innerHTML = `
+        Total Item : ${totalItem}<br>
+        Grand Total : $ ${grandTotal.toLocaleString()}
+    `;
 
     const today = new Date();
 
     document.getElementById('date').innerHTML =
-        today.toLocaleString();
+        today.toLocaleString('id-ID');
 }
